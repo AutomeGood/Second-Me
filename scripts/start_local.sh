@@ -62,7 +62,7 @@ mkdir -p "${BASE_DIR}/data/sqlite"
 
 if [ ! -f "$SQLITE_DB_PATH" ]; then
     log_info "Initializing database..."
-    cat docker/sqlite/init.sql | sqlite3 "$SQLITE_DB_PATH"
+    cat resources/sqlite/init.sql | sqlite3 "$SQLITE_DB_PATH"
     log_success "Database initialization completed"
 else
     log_info "Database already exists"
@@ -77,7 +77,7 @@ mkdir -p ${LOCAL_LOG_DIR}
 
 # Initialize ChromaDB
 log_info "Initializing ChromaDB..."
-python docker/app/init_chroma.py
+python scripts/init_chroma.py
 
 # Get local IP address (excluding localhost and docker networks)
 LOCAL_IP=$(ifconfig | grep "inet " | grep -v "127.0.0.1" | grep "192.168" | awk '{print $2}' | head -n 1)

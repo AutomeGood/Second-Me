@@ -1,61 +1,111 @@
 [tool.poetry]
-name = "lpm_kernel"
+name = "graphrag"
 version = "0.1.0"
-description = ""
-authors = ["Kevin <kevin@mindverse.ai>"]
+description = "GraphRAG"
+authors = ["Microsoft <graphrag@microsoft.com>"]
+license = "MIT"
 readme = "README.md"
+homepage = "https://aka.ms/graphrag"
+repository = "https://github.com/microsoft/graphrag"
+documentation = "https://microsoft.github.io/graphrag/"
+keywords = ["graphrag", "rag", "llm", "graphs", "ai", "question answering"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+packages = [{ include = "graphrag", from = "src" }]
 
 [tool.poetry.dependencies]
-python = ">=3.12,<3.13"
-flask = "^3.0.0"
-flask-sock = "^0.6.0"  # Downgraded to stable version
-sqlalchemy = {extras = ["asyncio"], version = "^2.0.0"}
-tiktoken = "^0.8.0"
-aiomysql = "^0.2.0"
+python = "^3.12"
 python-dotenv = "^1.0.0"
-aiohttp = "^3.9.1"
-asyncio = "^3.4.3"
-async-timeout = "^4.0.0"
-pytesseract = "^0.3.10"
-pdfplumber = "^0.10.3"
-flask-pydantic = "^0.11.0"
-pydantic = "^2.5.2"
-pymupdf = "^1.23.7"
-scikit-learn = "^1.3.0"
-requests = "^2.31.0"
-numpy = "^1.26.0"
-openai = "^1.50.0"
-langchain = "0.3.13"
+flask = "^3.0.0"
+langchain = "^0.1.0"
+langchain-community = "^0.0.31"
 chromadb = "^0.4.22"
-sentencepiece = "^0.2.0"
-httpx = {extras = ["socks"], version = "^0.28.1"}
-python-socks = "^2.4.0"
-jsonlines = "^4.0.0"
-charset-normalizer = "^3.4.1"
-modelscope = "^1.25.0"
-sentence-transformers = "^2.6.0"
+numpy = "<1.27" # TODO: remove once https://github.com/numpy/numpy/pull/25948 is released
+tiktoken = "^0.6.0"
+azure-identity = "^1.15.0"
+azure-keyvault-secrets = "^4.7.0"
+psutil = "^5.9.8"
+pyyaml = "^6.0.1"
+fastapi = "^0.110.0"
+uvicorn = {extras = ["standard"], version = "^0.28.0"}
+pydantic = "^2.6.4"
+langgraph = "^0.0.40"
+langchain-openai = "^0.1.3"
+langchain-text-splitters = "^0.0.1"
+aiohttp = "^3.9.3"
+sse-starlette = "^2.0.0"
+pytest = "^8.1.1"
+pytest-asyncio = "^0.23.5"
+pytest-mock = "^3.12.0"
+types-pyyaml = "^6.0.12.12"
+types-requests = "^2.31.0.20"
+types-psutil = "^5.9.5.20"
+requests = "^2.31.0" 
+psutil = "^5.9.0" # Added psutil
 
-# Development environment dependencies
-# Use 'poetry install --with dev' to install development dependencies
 [tool.poetry.group.dev.dependencies]
-pytest = "7.4.4"
-ruff = "0.1.15"
-pandas = "2.2.3"
-fnllm = {extras = ["azure", "openai"], version = "0.1.2"}
-transformers = "4.47.1"
-torch = "2.5.1"
-peft = "0.14.0"
-trl = "0.13.0"
-gguf = "0.10.0"
-datasets = "3.3.2"
-jiter = "0.8.2"
-
-# Documentation environment dependencies
-# Use 'poetry install --with docs' to install documentation dependencies
-[tool.poetry.group.docs.dependencies]
-mkdocs-material = "9.5.3"
-mkdocs = "1.5.3"
+ruff = "^0.3.4"
+pyright = "^1.1.352"
+ipykernel = "^6.29.3"
+notebook = "^7.1.2"
+pre-commit = "^3.7.0"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+graphrag = "graphrag.query:main"
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I001"]
+ignore = []
+fixable = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pyright]
+pythonVersion = "3.12"
+pythonPlatform = "All"
+typeCheckingMode = "strict"
+reportMissingTypeStubs = "information"
+reportMissingModuleSource = "information"
+reportImportCycles = "warning"
+reportUnusedVariable = "warning"
+reportUnusedImport = "warning"
+reportPrivateUsage = "warning"
+include = ["src/graphrag", "tests"]
+exclude = ["**/__pycache__", ".venv"]
+ignore = []
+stubPath = "stubs"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+    "functional: marks tests as functional tests (deselect with '-m \"not functional\"')",
+    "unit: marks tests as unit tests (deselect with '-m \"not unit\"')",
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
+asyncio_mode = "auto"
+pythonpath = ["src"]
